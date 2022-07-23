@@ -43,7 +43,9 @@ const getSingleTodo = async (req, res) => {
     return res.status(404).json({ success: false, message: "Not found" });
 
   try {
-    const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [id]);
+    const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [
+      id,
+    ]);
     return res.status(200).json({ success: true, todo: todo.rows[0] });
   } catch (error) {
     console.log(error.message);
@@ -53,4 +55,31 @@ const getSingleTodo = async (req, res) => {
   }
 };
 
-module.exports = { createTodo, gelAllTodos, getSingleTodo };
+const updateTodo = async (req, res) => {
+  const { id } = req.params;
+  const { description } = req.body;
+  if (!description || !id)
+    return res
+      .status(204)
+      .json({ success: false, message: "Description must be provided" });
+
+  try {
+    const updatedTodo = await pool.query(
+      "UPDATE todo SET description = $1 WHERE todo_id = $2",
+      [description, id]
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfully updated",
+      updatedTodo: updatedTodo,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { createTodo, gelAllTodos, getSingleTodo, updateTodo };
