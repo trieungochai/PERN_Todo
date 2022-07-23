@@ -82,4 +82,32 @@ const updateTodo = async (req, res) => {
   }
 };
 
-module.exports = { createTodo, gelAllTodos, getSingleTodo, updateTodo };
+const deleteTodo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedTodo = await pool.query(
+      "DELETE FROM todo WHERE todo_id = $1",
+      [id]
+    );
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "Successfully deleted",
+        deletedTodo: deletedTodo,
+      });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = {
+  createTodo,
+  gelAllTodos,
+  getSingleTodo,
+  updateTodo,
+  deleteTodo,
+};
