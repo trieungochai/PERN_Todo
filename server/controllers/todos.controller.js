@@ -37,4 +37,20 @@ const gelAllTodos = async (req, res) => {
   }
 };
 
-module.exports = { createTodo, gelAllTodos };
+const getSingleTodo = async (req, res) => {
+  const { id } = req.params;
+  if (!id)
+    return res.status(404).json({ success: false, message: "Not found" });
+
+  try {
+    const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [id]);
+    return res.status(200).json({ success: true, todo: todo.rows[0] });
+  } catch (error) {
+    console.log(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+module.exports = { createTodo, gelAllTodos, getSingleTodo };
