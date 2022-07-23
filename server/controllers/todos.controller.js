@@ -1,6 +1,6 @@
 const pool = require("../database");
 
-const getAllTodos = async (req, res) => {
+const createTodo = async (req, res) => {
   const { description } = req.body;
   if (!description)
     return res
@@ -14,7 +14,11 @@ const getAllTodos = async (req, res) => {
     );
     return res
       .status(201)
-      .json({ success: true, message: "Successfully created", newTodo: newTodo.rows[0] });
+      .json({
+        success: true,
+        message: "Successfully created",
+        newTodo: newTodo.rows[0],
+      });
   } catch (error) {
     console.log(error.message);
     return res
@@ -23,4 +27,4 @@ const getAllTodos = async (req, res) => {
   }
 };
 
-module.exports = { getAllTodos };
+module.exports = { createTodo };

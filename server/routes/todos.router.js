@@ -1,7 +1,8 @@
 const express = require("express");
-const { getAllTodos } = require("../controllers/todos.controller");
+const { createTodo } = require("../controllers/todos.controller");
+
 const todosRouter = express.Router();
 
-todosRouter.route("/").post(getAllTodos)
+todosRouter.route("/").post(createTodo);
 
 module.exports = todosRouter;
